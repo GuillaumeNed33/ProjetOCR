@@ -7,7 +7,6 @@ import java.util.ArrayList;
  * Created by Guillaume on 23/03/2017.
  */
 
-
 public class OCRImage {
     private ImagePlus img ;// contenu de l’image
     private char label ;// correspond au label de l’image ( donne par le nom du fichier --> 0 ,1 ,... ou 9)
