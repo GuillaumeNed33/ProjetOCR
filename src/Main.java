@@ -5,13 +5,16 @@
 import aimage.*;
 import ij.ImagePlus;
 import ij.process.ImageConverter;
+import ij.process.ImageProcessor;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.DoubleSummaryStatistics;
 
 public class Main {
     private ArrayList<OCRImage> listImg;
 
-    public void createListeImage ( String path , ArrayList < OCRImage > listeImg )
+    public void createListeImage(String path , ArrayList < OCRImage > listeImg)
     {
         File[] files = listFiles(path) ;
         if (files.length !=0)
@@ -36,4 +39,19 @@ public class Main {
     public void logOCR(String pathOut) {
 
     }
+
+    public void setFeatureNdgVect() {
+        for(OCRImage img : listImg) {
+            img.setFeatureNdg();
+        }
+    }
+
+    public void resize ( ImagePlus img , int larg , int haut )
+    {
+        ImageProcessor ip2 = img.getProcessor();
+        ip2.setInterpolate( true );
+        ip2 = ip2.resize(larg , haut );
+        img.setProcessor(null , ip2 );
+    }
+
 }

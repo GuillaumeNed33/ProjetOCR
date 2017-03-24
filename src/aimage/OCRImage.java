@@ -1,7 +1,9 @@
 package aimage;
 import ij .*;
+import ij.process.ImageProcessor;
 
 import java.util.ArrayList;
+import java.util.DoubleSummaryStatistics;
 
 /**
  * Created by Guillaume on 23/03/2017.
@@ -21,9 +23,30 @@ public class OCRImage {
         this.decision = '?';
         vect = new ArrayList <Double >();
     }
-    public void setImg ( ImagePlus img){ this.img=img ;}
-    public ImagePlus getImg (){ return img ;}
-    public void setVect ( int i, double val){ this.vect.set(i,val );}
-    public Double getVect ( int i){ return vect.get(i);}
+    public void setImg( ImagePlus img){ this.img=img ;}
+    public ImagePlus getImg(){ return img ;}
+    public void setVect( int i, double val){ this.vect.set(i,val );}
+    public Double getVect( int i){ return vect.get(i);}
 
+    public double AverageNdg() {
+        ImageProcessor ip = img.getChannelProcessor();
+        byte[] pixels = (byte[]) ip.getPixels();
+
+        int height = ip.getHeight();
+        int width = ip.getWidth();
+
+        double sum = 0;
+
+        for (int i = 0; i < width; i++)
+            for (int j = 0; j < height; j++)
+                sum += pixels[i*height + j] & 0xff;
+
+        return sum/(height*width);
+    }
+
+    public void setFeatureNdg() {
+            for(Double d : vect) {
+                d = AverageNdg();
+            }
+        }
 }
