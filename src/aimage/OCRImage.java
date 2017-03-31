@@ -13,6 +13,23 @@ public class OCRImage {
     private ImagePlus img ;// contenu de l’image
     private char label ;// correspond au label de l’image ( donne par le nom du fichier --> 0 ,1 ,... ou 9)
     private String path ;// path du fichier image
+
+    public char getLabel() {
+        return label;
+    }
+
+    public void setLabel(char label) {
+        this.label = label;
+    }
+
+    public char getDecision() {
+        return decision;
+    }
+
+    public void setDecision(char decision) {
+        this.decision = decision;
+    }
+
     private char decision ;// affectation du label apres classification
     private ArrayList<Double > vect ;// Vecteur de caracteristiques de l’image
     public OCRImage ( ImagePlus img , char label , String path )

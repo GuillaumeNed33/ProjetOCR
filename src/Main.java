@@ -7,8 +7,12 @@ import ij.ImagePlus;
 import ij.process.ImageConverter;
 import ij.process.ImageProcessor;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.DoubleSummaryStatistics;
 
 public class Main {
@@ -37,7 +41,55 @@ public class Main {
     }
 
     public void logOCR(String pathOut) {
+        int[][] confusion = new int[10][10];
 
+        //initialisation de la matrice
+        for(int i=0; i<10; i++) {
+            for(int j=0; j<10; j++) {
+                confusion[i][j] = 0;
+            }
+        }
+
+        //debut
+        int l,c;
+        for(int i=0;i<10;i++)
+        {
+            for(int j=0;j<10;j++)
+            {
+                l = Character.getNumericValue(listImg.get(i*10+j).getLabel());
+                c =l;
+                confusion[l][c]++;
+            }
+        }
+
+        //ecriture dans pathOut.txt
+        try {
+            FileWriter fw = new FileWriter (pathOut);
+            BufferedWriter bw = new BufferedWriter (fw);
+            PrintWriter outFile = new PrintWriter (bw);
+
+            Date date = new Date();
+            outFile.println ("Test OCR effectués le "+ date.toString() + " .\n");
+
+            outFile.print("   ");
+            for(int i=0; i<10 ; i++) {
+                outFile.print(Integer.toString(i) + "   ");
+            }
+            outFile.print("\n--------------------------------\n");
+
+            for(int i=0; i<10; i++) {
+                outFile.print(Integer.toString(i) + " | ");
+                for (int j=0; j<10; j++) {
+                    outFile.print(Integer.toString(confusion[i][j]) + "   ");
+                }
+                outFile.print("\n");
+            }
+            outFile.print("\n--------------------------------\n");
+            outFile.close();
+        }
+        catch (Exception e){
+            System.out.println(e.toString());
+        }
     }
 
     public void setFeatureNdgVect() {
