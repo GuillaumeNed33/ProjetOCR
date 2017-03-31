@@ -68,20 +68,20 @@ public class OCRModel {
             Date date = new Date();
             outFile.println ("Test OCR effectués le "+ date.toString() + " .\n");
 
-            outFile.print("   ");
+            outFile.print("    ");
             for(int i=0; i<10 ; i++) {
                 outFile.print(Integer.toString(i) + "   ");
             }
-            outFile.print("\n---------------------------------------\n");
+            outFile.print("\n------------------------------------------\n");
 
             for(int i=0; i<10; i++) {
                 outFile.print(Integer.toString(i) + " | ");
                 for (int j=0; j<10; j++) {
-                    outFile.print(Integer.toString(confusion[i][j]) + "  ");
+                    outFile.print(Integer.toString(confusion[i][j]) + "   ");
                 }
                 outFile.print("\n");
             }
-            outFile.print("\n---------------------------------------\n");
+            outFile.print("------------------------------------------\n");
             outFile.close();
         }
         catch (Exception e){
