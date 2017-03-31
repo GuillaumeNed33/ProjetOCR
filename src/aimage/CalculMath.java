@@ -2,13 +2,10 @@ package aimage;
 
 import java.util.ArrayList;
 
-/**
- * Created by Thomas on 24/03/2017.
- */
 public class CalculMath {
 
     public static double distEucli( ArrayList<Double>vect1,ArrayList <Double>vect2) {
-        double res = Double.MAX_VALUE;
+        double res = 0;
         for(int i = 0; i < vect1.size(); i++) {
             res += Math.pow(vect1.get(i) - vect2.get(i),2);
         }

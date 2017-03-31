@@ -34,11 +34,11 @@ public class OCRImage {
     private ArrayList<Double > vect ;// Vecteur de caracteristiques de l’image
     public OCRImage ( ImagePlus img , char label , String path )
     {
-        this.img=img;
+        resize(img,20,20);
         this.label = label ;
         this.path = path ;
         this.decision = '?';
-        vect = new ArrayList <Double >();
+        vect = new ArrayList<Double>();
     }
     public void setImg( ImagePlus img){ this.img=img ;}
     public ImagePlus getImg(){ return img ;}
@@ -46,7 +46,7 @@ public class OCRImage {
     public Double getVect( int i){ return vect.get(i);}
 
     public double AverageNdg() {
-        ImageProcessor ip = img.getChannelProcessor();
+        ImageProcessor ip = img.getProcessor();
         byte[] pixels = (byte[]) ip.getPixels();
 
         int height = ip.getHeight();
@@ -61,9 +61,16 @@ public class OCRImage {
         return sum/(height*width);
     }
 
+    public void resize ( ImagePlus img , int larg , int haut ) {
+        ImageProcessor ip2 = img.getProcessor () ;
+        ip2.setInterpolate(true) ;
+        ip2 = ip2.resize(larg,haut) ;
+        img.setProcessor(null ,ip2) ;
+    }
+
+
     public void setFeatureNdg() {
-            for(Double d : vect) {
-                d = AverageNdg();
-            }
+            vect.clear();
+            vect.add(AverageNdg());
         }
 }
