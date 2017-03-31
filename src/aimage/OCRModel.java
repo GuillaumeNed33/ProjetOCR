@@ -2,8 +2,6 @@ package aimage;
 
 import ij.ImagePlus;
 import ij.process.ImageConverter;
-import ij.process.ImageProcessor;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -13,10 +11,9 @@ import java.util.Date;
 
 public class OCRModel {
 
-    private ArrayList<OCRImage> listImg = new ArrayList<OCRImage>();
+    private ArrayList<OCRImage> listImg = new ArrayList<>();
 
-    public void createListeImage(String path , ArrayList < OCRImage > listeImg)
-    {
+    public void createListeImage(String path , ArrayList < OCRImage > listeImg) {
         File[] files = listFiles(path) ;
         if (files.length !=0)
         {
@@ -37,6 +34,19 @@ public class OCRModel {
         return files ;
     }
 
+    public void compare() {
+        ArrayList<ArrayList<Double>> vectors = new ArrayList<>();
+        for(OCRImage img : listImg)
+            vectors.add(img.getVect());
+
+        for (int i = 0; i < listImg.size(); i++) {
+            int res = CalculMath.PPV(listImg.get(i).getVect(), vectors, i);
+            if (listImg.get(res).getLabel() != '+' && listImg.get(res).getLabel() != '-') {
+                listImg.get(i).setDecision(listImg.get(res).getLabel());
+            }
+        }
+    }
+
     public void logOCR(String pathOut) {
         int[][] confusion = new int[10][10];
 
@@ -47,14 +57,10 @@ public class OCRModel {
             }
         }
 
-        //debut
-        int l,c;
-        for(int i=0;i<10;i++)
-        {
-            for(int j=0;j<10;j++)
-            {
-                l = Character.getNumericValue(listImg.get(i*10+j).getLabel());
-                c =l;
+        for(OCRImage img : listImg) {
+            if (img.getLabel() != '+' && img.getLabel() != '-' && img.getDecision() != '?') {
+                int l = Integer.parseInt(String.valueOf(img.getLabel()));
+                int c = Integer.parseInt(String.valueOf(img.getDecision()));
                 confusion[l][c]++;
             }
         }
@@ -74,14 +80,22 @@ public class OCRModel {
             }
             outFile.print("\n------------------------------------------\n");
 
+            double total = 0, value = 0;
             for(int i=0; i<10; i++) {
                 outFile.print(Integer.toString(i) + " | ");
                 for (int j=0; j<10; j++) {
                     outFile.print(Integer.toString(confusion[i][j]) + "   ");
+                    if (i == j) {
+                        value += confusion[i][j];
+                    }
+                    total += confusion[i][j];
                 }
                 outFile.print("\n");
             }
             outFile.print("------------------------------------------\n");
+
+            value /= total;
+            outFile.print("Le taux de reconnaissance est de : " + Math.floor(value * 100) + "%.");
             outFile.close();
         }
         catch (Exception e){
@@ -95,12 +109,28 @@ public class OCRModel {
         }
     }
 
-    public void resize ( ImagePlus img , int larg , int haut )
-    {
-        ImageProcessor ip2 = img.getProcessor();
-        ip2.setInterpolate( true );
-        ip2 = ip2.resize(larg , haut );
-        img.setProcessor(null , ip2 );
+    public void setProfilHV() {
+        for(OCRImage img : listImg) {
+            img.setFeatureProfilHV();
+        }
+    }
+
+    public void setRapportIso() {
+        for(OCRImage img : listImg) {
+            img.rapportIso();
+        }
+    }
+
+    public void setZoning() {
+        for(OCRImage img : listImg) {
+            img.zoning();
+        }
+    }
+
+    public void resizeAll(int larg , int haut ) {
+        for(OCRImage i : listImg) {
+            i.resize(i.getImg(), larg, haut);
+        }
     }
 
     public ArrayList<OCRImage> getListImg() {
