@@ -73,6 +73,7 @@ public class OCRModel {
 
             Date date = new Date();
             outFile.println ("Test OCR effectués le "+ date.toString() + " .\n");
+            outFile.println ("--- Matrice de confusion ---\n");
 
             outFile.print("    ");
             for(int i=0; i<10 ; i++) {

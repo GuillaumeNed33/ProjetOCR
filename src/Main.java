@@ -11,6 +11,6 @@ public class Main {
         ocr.setRapportIso();
         ocr.setZoning();
         ocr.compare();
-        ocr.logOCR("matriceConfusion.txt");
+        ocr.logOCR("result.txt");
     }
 }
